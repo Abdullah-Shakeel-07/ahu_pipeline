@@ -1,7 +1,9 @@
 from crawl import process_keyword, get_response, capsolver_sdk, log_error, CacheManager
+from db_insert import run as run_db
 import string
 import csv
 import os
+import pandas as pd
 
 
 ERROR_FILE = 'error.csv'
@@ -84,6 +86,12 @@ def save_companies(companies):
 
 
 def main():
+    # delete the output file if it exists becasue we are appending the output to the file
+    if os.path.exists(OUTPUT_FILE):
+        os.remove(OUTPUT_FILE)
+
+    innput_file_name = "random_keywords.csv"
+
     USE_DFS = False
 
     if USE_DFS:
@@ -93,12 +101,24 @@ def main():
     else:
         KEYWORD_LIST = []
 
-        with open("random_keywords.csv", "r", encoding="utf-8") as f:
+        with open(innput_file_name, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 KEYWORD_LIST.append(row["keywords"])
 
         process_keyword_list(KEYWORD_LIST)
+
+    # loading the file, removing the duplicated and uncessary column (i used them for testing the data)
+    df = pd.read_csv(OUTPUT_FILE, dtype = str)
+
+    df = df[['nbrs_id', 'company_name', 'company_type', 'phone', 'address']]
+
+    df.drop_duplicates(inplace = True)
+
+    df.to_csv(OUTPUT_FILE, index = False)
+
+    print("writing data to dbb")
+    run_db(input_csv=OUTPUT_FILE)
 
 
 if __name__ == "__main__":

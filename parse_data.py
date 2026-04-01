@@ -5,15 +5,15 @@ import os
 import csv
 
 COMPANY_TYPES = {
-    'PT': 'Perseroan Terbatas',
-    'CV': 'Commanditaire Vennootschap',
-    'UD': 'Usaha Dagang',
-    'FA': 'Firma',
-    'TB': 'Toko Bangunan',
+    'PT':'Perseroan Terbatas',
+    'CV':'Commanditaire Vennootschap',
+    'UD':'Usaha Dagang',
+    'FA':'Firma',
+    'TB':'Toko Bangunan',
     'PD': 'Perusahaan Daerah',
-    'PN': 'Perusahara Negara',
-    'KOPERASI': 'Koperasi',
-    'YAYASAN': 'Yayasan',
+    'PN':'Perusahara Negara',
+    'KOPERASI':'Koperasi',
+    'YAYASAN':'Yayasan',
 }
 
 def normalize(text):
@@ -45,29 +45,29 @@ def parse_companies(response_text, source_file):
         clean_name = normalize(raw_name)
 
         companies.append({
-            'nbrs_id':      nbrs_id,
-            'company_name': clean_name,
-            'company_type': extract_company_type(clean_name),
-            'phone':        normalize(phone),
-            'address':      normalize(address),
-            'kabpro':       normalize(kabpro),
-            'source_file':  source_file
+            'nbrs_id':nbrs_id,
+            'company_name':clean_name,
+            'company_type':extract_company_type(clean_name),
+            'phone':normalize(phone),
+            'address':normalize(address),
+            'kabpro':normalize(kabpro),
+            'source_file':source_file
         })
 
     return companies
 
 
 if __name__ == "__main__":
-    CACHE_DIR   = "./cache/ahu_cache"
+    cache_path = os.path.join('cache', 'ahu_cache')
     OUTPUT_FILE = "companies.csv"
 
     all_companies = []
 
-    for file_name in os.listdir(CACHE_DIR):
+    for file_name in os.listdir(cache_path):
         if not file_name.endswith(".html"):
             continue
 
-        file_path = os.path.join(CACHE_DIR, file_name)
+        file_path = os.path.join(cache_path, file_name)
 
         with open(file_path, "r", encoding="utf-8") as f:
             html_content = f.read()
@@ -75,7 +75,7 @@ if __name__ == "__main__":
         companies = parse_companies(html_content, file_name)
         all_companies.extend(companies)
 
-    fieldnames = ["nbrs_id", "company_name", "company_type", "phone", "address", "kabpro", "source_file"]
+    fieldnames = ["nbrs_id", "company_name", "company_type", "phone", "address", "kabpro", "source_file"] # adding sorse file name for testing the data
 
     with open(OUTPUT_FILE, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
