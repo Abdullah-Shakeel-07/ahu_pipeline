@@ -3,7 +3,7 @@ import re
 import csv
 from collections import defaultdict
 
-input_file = 'companies.csv'
+input_file = 'companie_data.csv'
 output_file = 'generated_keywords.csv'
 
 min_companies_return = 2

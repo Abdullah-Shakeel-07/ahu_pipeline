@@ -174,7 +174,7 @@ def process_keyword(nama, token=None):
     total_pages = pagination(response)
     print(f"total pages: {total_pages}")
 
-    if total_pages > 5: # for some keywords the total pages are invalid even on UI e.g: aba, abb, agn, ape, bad, baj
+    if total_pages > 10: # for some keywords the total pages are invalid even on UI e.g: aba, abb, agn, ape, bad, baj
         total_pages = 10
 
     for page in range(2, total_pages + 1):
