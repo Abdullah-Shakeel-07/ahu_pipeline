@@ -1,0 +1,7 @@
+python-dotenv
+capsolver
+lxml
+cssselect
+mysql-connector-python
+pandas
+requests
